@@ -1,5 +1,5 @@
 #include <Rcpp.h>
-#include <RcppEigen.h>
+#include <Eigen/Core>
 #include "NormalProp.h"
 #include "gaussianNewtonian.h"
 #include "VarianceTarget.h"

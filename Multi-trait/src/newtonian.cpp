@@ -1,5 +1,5 @@
 #include <Rcpp.h>
-#include <RcppEigen.h>
+#include <Eigen/Core>
 #include "newtonian.h"
 #include "NormalProp.h"
 using namespace Rcpp;

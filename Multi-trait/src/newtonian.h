@@ -2,7 +2,7 @@
 #ifndef NEWTONIAN_H
 #define NEWTONIAN_H
 #include <Rcpp.h>
-#include  <RcppEigen.h>
+#include  <Eigen/Core>
 #include "proposal.h"
 #include "TargetDist.h"
 using namespace Rcpp;

@@ -2,7 +2,6 @@
 #ifndef VARIANCETARGET_H
 #define VARIANCETARGET_H
 #include <Rcpp.h>
-#include <RcppEigen.h>
 #include <Eigen/Core>
 #include "TargetDist.h"
 

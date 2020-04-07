@@ -1,7 +1,6 @@
 #ifndef TARGETDIST_H
 #define TARGETDIST_H
 #include <Rcpp.h>
-#include <RcppEigen.h>
 #include <Eigen/Core>
 
 
