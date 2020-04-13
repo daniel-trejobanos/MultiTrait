@@ -1,0 +1,50 @@
+---
+title: "R2"
+output: html_notebook
+---
+
+Lets test groups model with R2 prior
+
+First lets simulate from the linear model with three groups
+
+```{r}
+LinearModel3grps <- function(N,Mtot,M,h2){
+  groupSize <- ceiling(Mtot/3)
+  G <- rep(0,Mtot)
+  G <- G[(M+1):2*M] <- 1
+  G <- G[(2*M + 1) :Mtot] <-2
+  sigmaG <- rep(h2/3)
+  B<-rep(0,Mtot)
+  B[1:M] <- rnorm(M,0,sqrt(h2/M))
+  E <- rnorm(N,0, sqrt(1-h2))
+  X<- matrix(rnorm(N*Mtot,0,1),ncol=Mtot)
+  Y <- X%*%B +E
+  Bsqn <- rep(0,3)
+  Bsqn[1] <-  sum(B[G==0]^2)
+  Bsqn[2] <- sum(B[G==1]^2)
+  Bsqn[3] <- sum(B[G==2]^2)
+  list(Y=Y,X=X,B=B,E=E,Bsqn=Bsqn, G=G)
+}
+```
+
+Now lets see if we can finde the sigmaG values
+
+```{r}
+N <- 2000
+Mtot <- 4000
+M <- 100
+h2 <- 0.6
+cur_sim <- LinearModel3grps(N,Mtot,M,h2)
+```
+
+
+Now let's see if multi trait works
+```{r}
+A <- c(2/3,2/3.2/3)
+B<- c(2,2,2)
+init <- rep(0.6/3,3)
+m0 <-rep(ceiling(100/3),3)
+bsqn <- cur_sim$Bsqn
+C <- MultiTrait::GroupSigma(iter=100, N=N,ngroups = 3,A = A,B=B,init = init,m0 = m0,bsqn = bsqn)
+```
+

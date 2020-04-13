@@ -1,10 +1,8 @@
 #ifndef GAMMANEWTONIAN_H
 #define GAMMANEWTONIAN_H
-#include <Rcpp.h>
 #include "newtonian.h"
 #include "GammaProp.h"
 #include "TargetDist.h"
-using namespace Rcpp;
 
 class GammaNewtonian: public NewtonianMC{
 public:

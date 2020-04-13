@@ -1,52 +1,45 @@
-#include <Rcpp.h>
-#include <Eigen/Core>
+#include <iostream>
 #include "GammaProp.h"
 #include "gammaNewtonian.h"
 #include "gaussianNewtonian.h"
 #include "groupVarianceTarget.h"
-using namespace Rcpp;
-// [[Rcpp::depends(RcppEigen)]]
-// entry point to sample tha variance from R conditioned on the rest
-// [[Rcpp::export]]
-Eigen::MatrixXd SampleGroupVariance(int iter, 
-                               Eigen::VectorXd& betasqn, 
-                               Eigen::VectorXd& m0, 
-                               double epssqnorm, 
-                               double N ,
-                               int ngroups,
-                               Eigen::VectorXd& a_sigmaG,
-                               Eigen::VectorXd& b_sigmaG,
-                               double a_eps,
-                               double b_eps,
-                               double init){
-  //
-  
-  GroupVarianceTarget target(a_sigmaG, b_sigmaG );
-  Rcpp::Rcout << "a_sigmaG " << target.a << "\n"; 
-  Rcpp::Rcout << "b_sigmaG " << target.b << "\n"; 
-  
-  target.Bsqnorms = betasqn;
-  Rcpp::Rcout << "betasqn " << target.Bsqnorms << "\n"; 
-  target.m0 = m0;
-  Rcpp::Rcout << "m0 " << target.m0 << "\n"; 
+#include <Eigen/Core>
+#include "sampleGroupVariances.h"
+
+void printTrgtDiagnostic(GroupVarianceTarget trgt){
+  std::cout << "a_sigmaG " << trgt.a << "\n";
+  std::cout << "b_sigmaG " << trgt.b << "\n";
+  std::cout << "betasqn " << trgt.Bsqnorms << "\n";
+  std::cout << "m0 " << trgt.m0 << "\n";
+}
+
+Eigen::MatrixXd SamplerGroupVar::sampleGroupVar(int Iter,
+                                                 Eigen::VectorXd &BetaSqn,
+                                                 Eigen::VectorXd &M0) {
+  //target distribution of group sigmaG with gamma priors with parameters A,B
+  GroupVarianceTarget target(ASigmaG, BSigmaG);
+  //group wise squared norms of betas
+  target.Bsqnorms = BetaSqn;
+  target.m0 = M0;
   GammaNewtonian Sampler(&target);
+  if(VerboseTrgt)
+    printTrgtDiagnostic(target);
+
+  Eigen::MatrixXd DrawsOut(Iter, NGroups);
+  DrawsOut.setZero();
+  Eigen::VectorXd CurrentDraw(10);
+  CurrentDraw.setZero();
   
-    
-  Eigen::MatrixXd draws_out(iter,ngroups+1);
-  draws_out.setZero();
-  Eigen::VectorXd current_draw(10);
-  current_draw.setZero();
-  for(int i=0; i < iter ; i++){
-    for(int j =0; j < ngroups; j++){
-      current_draw.setZero();
-      target.idx = j;
-      Sampler.newtmc_int(0.1,current_draw,10,1);
-      draws_out(i,j)= current_draw(9);
+  for (int i = 0; i < Iter; i++) {
+    for (int j = 0; j < NGroups; j++) {
+      CurrentDraw.setZero();
+      dynamic_cast<GroupVarianceTarget*>(Sampler.target)->idx = j;
+      Sampler.newtmc_int(Init(j), CurrentDraw, 10, 1);
+      DrawsOut(i, j) = CurrentDraw(9);
     }
-    current_draw.setZero();
-    //EpsSampler.newtmc_int(R::runif(0,1),current_draw,10,1);
-    draws_out(i,ngroups)= current_draw(9);
+    CurrentDraw.setZero();
+    DrawsOut(i, NGroups) = CurrentDraw(9);
   }
-  
-  return draws_out;
+
+  return DrawsOut;
 }

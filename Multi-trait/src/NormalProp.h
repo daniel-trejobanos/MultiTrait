@@ -1,7 +1,6 @@
 #ifndef NORMALPROPOSAL_H
 #define NORMALPROPOSAL_H
 #include "proposal.h"
-using namespace Rcpp;
 
 class NormalProp:public ProposalDist{
 public:

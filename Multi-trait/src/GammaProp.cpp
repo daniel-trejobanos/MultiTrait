@@ -1,20 +1,23 @@
-#include <Rcpp.h>
 #include <Eigen/Core>
 #include "GammaProp.h"
-using namespace Rcpp;
+#include "dist.h"
+
 
 GammaProp::GammaProp(){
   parameter1 = 1; // zero mean
   parameter2 = 1;
+  dist= Distributions_boost(123);
 }
 
 //mean of the gaussian distribution
 void GammaProp::setParameter1(double point, double gradient, double hessian){
   parameter1 = 1 -point* point * hessian;
+  assert(parameter1 >= 0 );
 }
 
 void GammaProp::setParameter2(double point, double gradient, double hessian){
   parameter2 = - point *hessian -gradient;
+  assert(parameter2 >= 0);
 }
 
 double GammaProp::condLogProb(double conditioned_point){
@@ -22,5 +25,5 @@ double GammaProp::condLogProb(double conditioned_point){
 }
 
 double GammaProp::draw(){
-  return R::rgamma(parameter1, 1/parameter2) ;
+  return dist.rgamma(parameter1, parameter2) ;
 }

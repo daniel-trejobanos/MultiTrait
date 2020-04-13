@@ -1,8 +1,7 @@
 // proposal distribution abstract class, each proposal must have two parameters, the 
 #ifndef PROPOSAL_H
 #define PROPOSAL_H
-#include <Rcpp.h>
-using namespace Rcpp;
+#include "dist.h"
 
 class ProposalDist{
 public:
@@ -14,6 +13,7 @@ public:
  
   double parameter1;
   double parameter2;
+  Distributions_boost dist;
 };
 
 #endif

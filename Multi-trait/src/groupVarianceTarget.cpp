@@ -1,4 +1,3 @@
-#include <Rcpp.h>
 #include <Eigen/Core>
 #include "groupVarianceTarget.h"
 
@@ -16,18 +15,18 @@ double inline hessianPrior(double x, double a, double b){
 
 
 void GroupVarianceTarget::update_log_kernel(){
-  //double log_lik =  -0.5 * m0(idx) * Bsqnorms(idx) / current_value - 0.5*log(current_value);
-  //log_kernel = log_lik + priorlpdf(current_value, a(idx), b(idx));
+  double log_lik =  -0.5 * m0(idx) * Bsqnorms(idx) / current_value - 0.5*log(current_value);
+  log_kernel = log_lik + priorlpdf(current_value, a(idx), b(idx));
 }
 
 
 void GroupVarianceTarget::update_gradient(){
-  //auto gradient_log_lik = 0.5 * m0(idx) * Bsqnorms(idx) / (current_value2) - 0.5/current_value;
-  //gradient = gradient_log_lik + gradientPrior(current_value, a(idx), b(idx));
+  auto gradient_log_lik = 0.5 * m0(idx) * Bsqnorms(idx) / (current_value2) - 0.5/current_value;
+  gradient = gradient_log_lik + gradientPrior(current_value, a(idx), b(idx));
 }
 
 
 void GroupVarianceTarget::update_hessian(){
-  //auto hessian_log_lik = - m0(idx) * Bsqnorms(idx) / (current_value3) + 0.5/(current_value2);
-  //hessian= hessian_log_lik + hessianPrior(current_value,a(idx),b(idx));
+  auto hessian_log_lik = - m0(idx) * Bsqnorms(idx) / (current_value3) + 0.5/(current_value2);
+  hessian= hessian_log_lik + hessianPrior(current_value,a(idx),b(idx));
 }

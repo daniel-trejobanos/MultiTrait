@@ -1,0 +1,3 @@
+#!/bin/bash
+find ../build ! -name 'configure' -type f -exec rm -f {} +
+cmake -DCMAKE_BUILD_TYPE="DEBUG" -DENABLE_UNIT_TESTS=TRUE -DCMAKE_CXX_COMPILER="/usr/local/opt/llvm/bin/clang++" -DCMAKE_CXX_FLAGS="-I/Library/Frameworks/R.framework/Versions/Current/Resources/library/Rcpp/include/ -I/Library/Frameworks/R.framework/Versions/Current/Resources/library/RInside/include/ -I/Library/Frameworks/R.framework/Resources/include"  -DCMAKE_SHARED_LINKER_FLAGS="-L/usr/local/opt/llvm/lib -L/Library/Frameworks/R.framework/Versions/Current/Resources/lib/ -L/Library/Frameworks/R.framework/Versions/Current/Resources/library/RInside/lib -L/Library/Frameworks/R.framework/Versions/Current/Resources/library/Rcpp/libs/ -L/usr/lib64/R/lib/"  ../

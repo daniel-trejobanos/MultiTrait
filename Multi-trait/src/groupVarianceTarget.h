@@ -1,6 +1,5 @@
 #ifndef GROUPVARIANCETARGET_H
 #define GROUPVARIANCETARGET_H
-#include <Rcpp.h>
 #include <Eigen/Core>
 #include "TargetDist.h"
 

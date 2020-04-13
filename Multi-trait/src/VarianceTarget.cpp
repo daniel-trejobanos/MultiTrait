@@ -1,4 +1,3 @@
-#include <Rcpp.h>
 #include <Eigen/Core>
 #include "VarianceTarget.h"
 

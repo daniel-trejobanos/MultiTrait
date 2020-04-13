@@ -1,7 +1,6 @@
-#include <Rcpp.h>
 #include <Eigen/Core>
 #include "NormalProp.h"
-using namespace Rcpp;
+#include <Rcpp.h>
 
 NormalProp::NormalProp(){
   parameter1 = 0; // zero mean
@@ -15,6 +14,7 @@ void NormalProp::setParameter1(double point, double gradient, double hessian){
 
 void NormalProp::setParameter2(double point, double gradient, double hessian){
   parameter2 = - 1.0 / hessian;
+  assert(parameter2 >= 0);
 }
 
 double NormalProp::condLogProb(double conditioned_point){

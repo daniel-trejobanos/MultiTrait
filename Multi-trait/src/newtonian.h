@@ -1,11 +1,9 @@
 //Single site newtonian montecarlo base class of the strategy pattern
 #ifndef NEWTONIAN_H
 #define NEWTONIAN_H
-#include <Rcpp.h>
 #include  <Eigen/Core>
 #include "proposal.h"
 #include "TargetDist.h"
-using namespace Rcpp;
 
 class NewtonianMC{
 public:
