@@ -1,7 +1,8 @@
 #include "GammaProp.h"
-#include "gammaNewtonian.h"
+#include "NormalProp.h"
 #include "groupVarianceTarget.h"
 #include "linearModel.h"
+#include "sampleEpsVariance.h"
 #include "sampleGroupVariances.h"
 #include "gtest/gtest.h"
 #include <math.h>
@@ -68,7 +69,7 @@ TEST_F(GVSamplerTester, testLogKernel) {
 }
 
 TEST_F(GVSamplerTester, Testsamplerlogkernel) {
-
+  int seed = 123;
   double N = static_cast<double>(LM.Y.rows());
   int Ngroups = LM.NumGroups;
   Eigen::VectorXd A(Ngroups); // a parameter of prior
@@ -77,23 +78,44 @@ TEST_F(GVSamplerTester, Testsamplerlogkernel) {
   Init.array() = LM.h2 / Ngroups; // start at true value
   Eigen::VectorXd M0(Ngroups);
   M0.array() = ceil(LM.M / Ngroups);
-  A.array() = 2 / 3;
-  B.array() = 2;
+  A.array() = 2.0 / 3.0;
+  B.array() = 2.0;
+  Distributions_boost dist(123);
   GroupVarianceTarget target(A, B);
-
+  NormalProp prop(dist);
+  NormalProp prev(dist);
   // group wise squared norms of betas
   target.Bsqnorms = LM.BSqN;
   target.m0 = M0;
-  GammaNewtonian Sampler(&target);
+  NewtonianMC Sampler(&target, &prop, &prev, dist);
   dynamic_cast<GroupVarianceTarget *>(Sampler.target)->idx = 0;
   Sampler.target->update(Init(0));
   // TODO for loop to test all log kernels
-  double llk = -0.5 * M0(0) * LM.BSqN(0) / Init(0) - 0.5 * log(Init(0)) -
-               A(0) * log(B(0)) + (A(0) - 1) * log(Init(0)) - B(0) * Init(0) -
-               std::lgamma(A(0));
-  ASSERT_DOUBLE_EQ(llk, Sampler.target->log_kernel);
-}
+  double llk = -0.5 * M0(0) * LM.BSqN(0) / Init(0) -
+               0.5 * M0(0) * log(Init(0)) + A(0) * log(B(0)) +
+               (A(0) - 1) * log(Init(0)) - B(0) * Init(0) - std::lgamma(A(0));
+  ASSERT_EQ(LM.h2, 0.6);
+  ASSERT_EQ(N, 2000);
+  ASSERT_EQ(LM.BSqN.size(), Ngroups);
+  EXPECT_DOUBLE_EQ(llk, Sampler.target->log_kernel);
+  SamplerGroupVar SamplerV(seed, N, Ngroups, A, B, Init);
+  // M0.setOnes();
+  std::cout << LM.BSqN << "\n\n";
+  std::cout << M0 << "\n\n";
+  std::cout << Init << "\n\n";
 
+  SamplerV.sampleGroupVar(10, LM.BSqN, M0);
+  // ASSERT_EQ(SamplerV.N, 2000);
+
+  // ASSERT_EQ(SamplerV.NGroups, 3);
+  // ASSERT_TRUE(A.isApprox(SamplerV.ASigmaG));
+
+  // std::cout << "eps: " <<LM.E.squaredNorm()/N<<"\n\n";
+  // SamplerEpsVar SamplerE(seed, N, 1, 1, 0.4);
+  // SamplerE.sampleEpsVar(1,LM.E.squaredNorm());
+
+  // ASSERT_TRUE((SamplerV.Init));
+}
 
 } // Namespace
 } // namespace project

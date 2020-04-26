@@ -6,7 +6,7 @@
 class GroupVarianceTarget:public TargetDist{
 public:
   //initialize the prior hyper paramters
-  GroupVarianceTarget(Eigen::VectorXd& _a, Eigen::VectorXd& _b):
+  GroupVarianceTarget(const Eigen::VectorXd& _a,const Eigen::VectorXd& _b):
   a(_a),
   b(_b){};
   

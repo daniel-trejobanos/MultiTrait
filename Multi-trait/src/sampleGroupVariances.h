@@ -1,20 +1,37 @@
 #ifndef SAMPLEGV_H
 #define SAMPLEGV_H
+#include "NormalProp.h"
+#include "InvGammaProp.h"
+#include "groupVarianceTarget.h"
+#include "newtonian.h"
 #include <Eigen/Core>
-
-
 class SamplerGroupVar {
 public:
   double N;
   int NGroups;
-  Eigen::VectorXd &ASigmaG;
-  Eigen::VectorXd &BSigmaG;
-  Eigen::VectorXd &Init;
+  const Eigen::VectorXd &ASigmaG;
+  const Eigen::VectorXd &BSigmaG;
+
+  const Eigen::VectorXd &Init;
+
+  GroupVarianceTarget target;
+
+  InvGammaProp prop;
+  InvGammaProp prev;
+
+  NewtonianMC Sampler;
+
   bool VerboseTrgt = 0;
-  SamplerGroupVar(double _N, int _ngroups, Eigen::VectorXd &_a,
-                  Eigen::VectorXd &_b, Eigen::VectorXd& _init)
-      : N(_N), NGroups(_ngroups), ASigmaG(_a), BSigmaG(_b), Init(_init){};
-  Eigen::MatrixXd sampleGroupVar(int Iter, Eigen::VectorXd &BetaSqn,
-                                 Eigen::VectorXd &M0);
+  int seed;
+  Distributions_boost dist;
+
+  SamplerGroupVar(int seed, double _N, int _ngroups, const Eigen::VectorXd &_a,
+                  const Eigen::VectorXd &_b, const Eigen::VectorXd &_init)
+      : dist(seed), N(_N), NGroups(_ngroups), ASigmaG(_a), BSigmaG(_b),
+        Init(_init), target(_a, _b), prop(dist), prev(dist),
+        Sampler(&target, &prop, &prev, dist){};
+
+  Eigen::MatrixXd sampleGroupVar(int Iter, const Eigen::VectorXd &BetaSqn,
+                      const Eigen::VectorXd &M0);
 };
 #endif

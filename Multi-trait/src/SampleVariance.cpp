@@ -1,7 +1,6 @@
 #include <Rcpp.h>
 #include <Eigen/Core>
 #include "NormalProp.h"
-#include "gaussianNewtonian.h"
 #include "VarianceTarget.h"
 // [[Rcpp::depends(RcppEigen)]]
 // entry point to sample tha variance from R conditioned on the rest

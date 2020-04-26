@@ -1,12 +1,9 @@
-#include <iostream>
-#include "GammaProp.h"
-#include "gammaNewtonian.h"
-#include "gaussianNewtonian.h"
+#include "sampleGroupVariances.h"
 #include "groupVarianceTarget.h"
 #include <Eigen/Core>
-#include "sampleGroupVariances.h"
+#include <iostream>
 
-void printTrgtDiagnostic(GroupVarianceTarget trgt){
+void printTrgtDiagnostic(GroupVarianceTarget trgt) {
   std::cout << "a_sigmaG " << trgt.a << "\n";
   std::cout << "b_sigmaG " << trgt.b << "\n";
   std::cout << "betasqn " << trgt.Bsqnorms << "\n";
@@ -14,27 +11,31 @@ void printTrgtDiagnostic(GroupVarianceTarget trgt){
 }
 
 Eigen::MatrixXd SamplerGroupVar::sampleGroupVar(int Iter,
-                                                 Eigen::VectorXd &BetaSqn,
-                                                 Eigen::VectorXd &M0) {
-  //target distribution of group sigmaG with gamma priors with parameters A,B
-  GroupVarianceTarget target(ASigmaG, BSigmaG);
-  //group wise squared norms of betas
+                                                const Eigen::VectorXd &BetaSqn,
+                                                const Eigen::VectorXd &M0) {
+
+  // group wise squared norms of betas
   target.Bsqnorms = BetaSqn;
   target.m0 = M0;
-  GammaNewtonian Sampler(&target);
-  if(VerboseTrgt)
-    printTrgtDiagnostic(target);
 
+// if (VerboseTrgt)
+#ifdef DEBUG
+  printTrgtDiagnostic(target);
+
+  std::cout << "Ngroups" << NGroups << "\n";
+  std::cout << "iter" << Iter << "\n";
+#endif
+  assert(Iter * NGroups > 0);
   Eigen::MatrixXd DrawsOut(Iter, NGroups);
+  assert(DrawsOut.size() == Iter * NGroups);
   DrawsOut.setZero();
   Eigen::VectorXd CurrentDraw(10);
-  CurrentDraw.setZero();
-  
+  std::cout << "Sampling group variances using Newtonian MC\n";
   for (int i = 0; i < Iter; i++) {
     for (int j = 0; j < NGroups; j++) {
       CurrentDraw.setZero();
-      dynamic_cast<GroupVarianceTarget*>(Sampler.target)->idx = j;
-      Sampler.newtmc_int(Init(j), CurrentDraw, 10, 1);
+      dynamic_cast<GroupVarianceTarget *>(Sampler.target)->idx = j;
+      Sampler.newtmc_int(Init(j), CurrentDraw, 1);
       DrawsOut(i, j) = CurrentDraw(9);
     }
     CurrentDraw.setZero();

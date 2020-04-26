@@ -1,11 +1,11 @@
-#ifndef GAMMAPROPOSAL_H
-#define GAMMAPROPOSAL_H
+#ifndef INVGAMMAPROPOSAL_H
+#define INVGAMMAPROPOSAL_H
 #include "proposal.h"
 
-class GammaProp : public ProposalDist {
+class InvGammaProp : public ProposalDist {
 public:
   
-GammaProp(Distributions_boost &_dist) : ProposalDist(_dist) {
+InvGammaProp(Distributions_boost &_dist) : ProposalDist(_dist) {
   parameter1 = 1; // zero mean
   parameter2 = 1;
 };

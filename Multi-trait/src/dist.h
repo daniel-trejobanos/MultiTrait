@@ -4,7 +4,7 @@
 #include <random>
 #include <Eigen/Eigen>
 #include "boost/random.hpp"
-#include "boost/generator_iterator.hpp"
+#include "dist.h"
 
 class Distributions_boost{
     unsigned int seed;
