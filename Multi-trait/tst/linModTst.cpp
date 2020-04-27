@@ -98,7 +98,8 @@ TEST_F(GVSamplerTester, Testsamplerlogkernel) {
   ASSERT_EQ(N, 2000);
   ASSERT_EQ(LM.BSqN.size(), Ngroups);
   EXPECT_DOUBLE_EQ(llk, Sampler.target->log_kernel);
-  SamplerGroupVar SamplerV(seed, N, Ngroups, A, B, Init);
+  
+  SamplerGroupVar SamplerV(dist, N, Ngroups, A, B, Init);
   // M0.setOnes();
   std::cout << LM.BSqN << "\n\n";
   std::cout << M0 << "\n\n";
@@ -111,8 +112,8 @@ TEST_F(GVSamplerTester, Testsamplerlogkernel) {
   // ASSERT_TRUE(A.isApprox(SamplerV.ASigmaG));
 
   // std::cout << "eps: " <<LM.E.squaredNorm()/N<<"\n\n";
-  // SamplerEpsVar SamplerE(seed, N, 1, 1, 0.4);
-  // SamplerE.sampleEpsVar(1,LM.E.squaredNorm());
+  SamplerEpsVar SamplerE(dist, N, 1, 1, 0.4);
+  SamplerE.sampleEpsVar(1,LM.E.squaredNorm());
 
   // ASSERT_TRUE((SamplerV.Init));
 }

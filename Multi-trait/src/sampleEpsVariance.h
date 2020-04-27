@@ -1,8 +1,8 @@
 #ifndef SAMPLEPSV_H
 #define SAMPLEPSV_H
-#include "NormalProp.h"
 #include "GammaProp.h"
 #include "InvGammaProp.h"
+#include "NormalProp.h"
 #include "epsilonVarianceTarget.h"
 #include "newtonian.h"
 #include <Eigen/Core>
@@ -23,13 +23,12 @@ public:
 
   bool VerboseTrgt = 1;
   int seed;
-  Distributions_boost dist;
+  Distributions_boost &dist;
 
-  SamplerEpsVar(int seed, double _N, const double _a,
-                  const double _b, const double _init)
-      : dist(seed), N(_N), AEps(_a), BEps(_b),
-        Init(_init), target(_a, _b), prop(dist), prev(dist),
-        Sampler(&target, &prop, &prev, dist){};
+  SamplerEpsVar(Distributions_boost &dist, double _N, const double _a,
+                const double _b, const double _init)
+      : dist(dist), N(_N), AEps(_a), BEps(_b), Init(_init), target(_a, _b, _N),
+        prop(dist), prev(dist), Sampler(&target, &prop, &prev, dist){};
 
   void sampleEpsVar(int Iter, const double ESqn);
 };

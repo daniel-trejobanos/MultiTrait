@@ -23,11 +23,11 @@ public:
 
   bool VerboseTrgt = 0;
   int seed;
-  Distributions_boost dist;
+  Distributions_boost &dist;
 
-  SamplerGroupVar(int seed, double _N, int _ngroups, const Eigen::VectorXd &_a,
+  SamplerGroupVar(Distributions_boost &dist, double _N, int _ngroups, const Eigen::VectorXd &_a,
                   const Eigen::VectorXd &_b, const Eigen::VectorXd &_init)
-      : dist(seed), N(_N), NGroups(_ngroups), ASigmaG(_a), BSigmaG(_b),
+      : dist(dist), N(_N), NGroups(_ngroups), ASigmaG(_a), BSigmaG(_b),
         Init(_init), target(_a, _b), prop(dist), prev(dist),
         Sampler(&target, &prop, &prev, dist){};
 
