@@ -30,6 +30,6 @@ public:
       : dist(dist), N(_N), AEps(_a), BEps(_b), Init(_init), target(_a, _b, _N),
         prop(dist), prev(dist), Sampler(&target, &prop, &prev, dist){};
 
-  void sampleEpsVar(int Iter, const double ESqn);
+  double sampleEpsVar(int Iter, const double ESqn);
 };
 #endif

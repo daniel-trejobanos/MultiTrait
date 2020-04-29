@@ -10,7 +10,7 @@ void printTrgtDiagnostic(GroupVarianceTarget trgt) {
   std::cout << "m0 " << trgt.m0 << "\n";
 }
 
-Eigen::MatrixXd SamplerGroupVar::sampleGroupVar(int Iter,
+Eigen::VectorXd SamplerGroupVar::sampleGroupVar(int Iter,
                                                 const Eigen::VectorXd &BetaSqn,
                                                 const Eigen::VectorXd &M0) {
 
@@ -42,5 +42,5 @@ Eigen::MatrixXd SamplerGroupVar::sampleGroupVar(int Iter,
     DrawsOut(i, NGroups) = CurrentDraw(9);
   }
 
-  return DrawsOut;
+  return Eigen::VectorXd(DrawsOut.row(0));
 }

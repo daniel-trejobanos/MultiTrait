@@ -31,7 +31,7 @@ public:
         Init(_init), target(_a, _b), prop(dist), prev(dist),
         Sampler(&target, &prop, &prev, dist){};
 
-  Eigen::MatrixXd sampleGroupVar(int Iter, const Eigen::VectorXd &BetaSqn,
+  Eigen::VectorXd sampleGroupVar(int Iter, const Eigen::VectorXd &BetaSqn,
                       const Eigen::VectorXd &M0);
 };
 #endif

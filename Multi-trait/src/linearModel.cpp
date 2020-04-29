@@ -1,4 +1,5 @@
 #include "linearModel.h"
+#include <chrono>
 #include <Eigen/Core>
 
 void LinearModel::simulate() {

@@ -1,4 +1,3 @@
-#include <Rcpp.h>
 #include <Eigen/Core>
 #include "NormalProp.h"
 #include "VarianceTarget.h"

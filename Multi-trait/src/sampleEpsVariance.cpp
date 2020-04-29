@@ -10,7 +10,7 @@ void printTrgtDiagnostic(EpsilonVarianceTarget trgt) {
   std::cout << "N " << trgt.N << "\n\n";
 }
 
-void SamplerEpsVar::sampleEpsVar(int Iter,const double ESqn) {
+double SamplerEpsVar::sampleEpsVar(int Iter,const double ESqn) {
   // target distribution of group sigmaG with gamma priors with parameters A,B
   // GroupVarianceTarget target(ASigmaG, BSigmaG);
   // group wise squared norms of betas
@@ -27,8 +27,8 @@ void SamplerEpsVar::sampleEpsVar(int Iter,const double ESqn) {
     
     CurrentDraw.setZero();
     Sampler.newtmc_int(Init, CurrentDraw, 1);
-    // DrawsOut(i, NGroups) = CurrentDraw(9);
+    
   }
-
-  // return DrawsOut;
+  //to ease integration we only return the last iteration
+  return CurrentDraw(9);
 }
