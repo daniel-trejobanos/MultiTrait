@@ -12,7 +12,7 @@ public:
   const double AEps;
   const double BEps;
 
-  const double Init;
+  double Init;
 
   EpsilonVarianceTarget target;
 

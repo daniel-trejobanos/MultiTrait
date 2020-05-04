@@ -15,9 +15,9 @@ public:
   void update_hessian();
   
   
-  Eigen::VectorXd Bsqnorms;
-  Eigen::VectorXd m0;
-  Eigen::VectorXd sigmaG;
+  double Bsqnorms;
+  double m0;
+  // Eigen::VectorXd sigmaG;
   Eigen::VectorXd a;
   Eigen::VectorXd b;
   int idx;

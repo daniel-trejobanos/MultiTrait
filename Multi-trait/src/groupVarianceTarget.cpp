@@ -14,25 +14,25 @@ double inline hessianPrior(double x, double a, double b) {
 }
 
 void GroupVarianceTarget::update_log_kernel() {
-  auto nM = m0(idx);
+  auto nM = m0;
   double log_lik =
-      -0.5 * nM * Bsqnorms(idx) / current_value - 0.5 * nM * log(current_value);
+      -0.5 * nM * Bsqnorms / current_value - 0.5 * nM * log(current_value);
 
   log_kernel = log_lik + priorlpdf(current_value, a(idx), b(idx));
 }
 
 void GroupVarianceTarget::update_gradient() {
-  auto nM = m0(idx);
+  auto nM = m0;
   auto gradient_log_lik =
-      0.5 * nM * Bsqnorms(idx) / (current_value2)-0.5 * nM / current_value;
+      0.5 * nM * Bsqnorms / (current_value2)-0.5 * nM / current_value;
 
   gradient = gradient_log_lik + gradientPrior(current_value, a(idx), b(idx));
 }
 
 void GroupVarianceTarget::update_hessian() {
-  auto nM = m0(idx);
+  auto nM = m0;
   auto hessian_log_lik =
-      -nM * Bsqnorms(idx) / (current_value3) + 0.5 * nM / (current_value2);
+      -nM * Bsqnorms / (current_value3) + 0.5 * nM / (current_value2);
 
   hessian = hessian_log_lik + hessianPrior(current_value, a(idx), b(idx));
 }

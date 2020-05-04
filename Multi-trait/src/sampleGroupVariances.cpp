@@ -10,21 +10,22 @@ void printTrgtDiagnostic(GroupVarianceTarget trgt) {
   std::cout << "m0 " << trgt.m0 << "\n";
 }
 
-Eigen::VectorXd SamplerGroupVar::sampleGroupVar(int Iter,
-                                                const Eigen::VectorXd &BetaSqn,
-                                                const Eigen::VectorXd &M0) {
+double SamplerGroupVar::sampleGroupVar(int Iter, double BetaSqn, double M0, int idx) {
 
   // group wise squared norms of betas
-  target.Bsqnorms = BetaSqn;
-  target.m0 = M0;
+  dynamic_cast<GroupVarianceTarget *>(Sampler.target)->Bsqnorms = BetaSqn;
+  dynamic_cast<GroupVarianceTarget *>(Sampler.target)->m0= M0;
+  dynamic_cast<GroupVarianceTarget *>(Sampler.target)->idx = idx;
+  // newtonian seems very sensitive to initial conditions
+  // Init(idx) = dist.unif_rng();
 
-// if (VerboseTrgt)
-#ifdef DEBUG
+  // if (VerboseTrgt)
+
   printTrgtDiagnostic(target);
 
   std::cout << "Ngroups" << NGroups << "\n";
   std::cout << "iter" << Iter << "\n";
-#endif
+
   assert(Iter * NGroups > 0);
   Eigen::MatrixXd DrawsOut(Iter, NGroups);
   assert(DrawsOut.size() == Iter * NGroups);
@@ -32,15 +33,12 @@ Eigen::VectorXd SamplerGroupVar::sampleGroupVar(int Iter,
   Eigen::VectorXd CurrentDraw(10);
   std::cout << "Sampling group variances using Newtonian MC\n";
   for (int i = 0; i < Iter; i++) {
-    for (int j = 0; j < NGroups; j++) {
-      CurrentDraw.setZero();
-      dynamic_cast<GroupVarianceTarget *>(Sampler.target)->idx = j;
-      Sampler.newtmc_int(Init(j), CurrentDraw, 1);
-      DrawsOut(i, j) = CurrentDraw(9);
-    }
+
     CurrentDraw.setZero();
-    DrawsOut(i, NGroups) = CurrentDraw(9);
+
+    Sampler.newtmc_int(Init(idx), CurrentDraw, 1);
   }
 
-  return Eigen::VectorXd(DrawsOut.row(0));
+
+return CurrentDraw(9);
 }

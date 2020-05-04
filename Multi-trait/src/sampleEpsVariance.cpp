@@ -22,7 +22,7 @@ double SamplerEpsVar::sampleEpsVar(int Iter,const double ESqn) {
   Eigen::VectorXd DrawsOut(Iter);
   DrawsOut.setZero();
   Eigen::VectorXd CurrentDraw(10);
-  
+  //Init=dist.unif_rng();
   for (int i = 0; i < Iter; i++) {
     
     CurrentDraw.setZero();
