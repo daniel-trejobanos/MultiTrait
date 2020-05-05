@@ -3,14 +3,17 @@
 
 double inline priorlpdf(double x, double a, double b) {
   return a * log(b) + (a - 1) * log(x) - b * x - std::lgamma(a);
+  // return -0.5*(x)*(x)/0.25;
 }
 
 double inline gradientPrior(double x, double a, double b) {
   return -b + (a - 1) / x;
+  // return -(x)/0.25;
 }
 
 double inline hessianPrior(double x, double a, double b) {
   return -(a - 1) / (x * x);
+  // return -1/0.25;
 }
 
 void EpsilonVarianceTarget::update_log_kernel() {
