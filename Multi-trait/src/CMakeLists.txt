@@ -26,6 +26,8 @@ add_library(${CMAKE_PROJECT_NAME}_lib STATIC
   sampleEpsVariance.h
   InvGammaProp.h
   InvGammaProp.cpp
+  localTarget.cpp
+  LocalVarianceSampler.cpp
 )
 
 add_executable(${BINARY}_run main.cpp)
